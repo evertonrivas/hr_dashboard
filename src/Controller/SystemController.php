@@ -54,7 +54,7 @@ class SystemController extends AppController{
 			
 			//print("Admitidos: ".$admitidos.", Demitidos: ".$demitidos.", Total".$total);
 			
-			$retorno = ((($admitidos + $demitidos)/2)/$total)*100;
+			$retorno = number_format(((($admitidos + $demitidos)/2)/$total)*100,2);
 			
 		}elseif($indicator=="abs"){
 			//o absenteismo eh composto por faltas, atrasos e saidas antecipadas justificadas ou nao
@@ -74,7 +74,7 @@ class SystemController extends AppController{
 			$qryTotal->where(function($exp){ return $exp->isNull('resignation'); });
 			$total = $qryTotal->first()->total;
 			
-			$retorno = ($demitidos/$total)*100;
+			$retorno = number_format(($demitidos/$total)*100,2);
 			
 		}elseif($indicator=="prd"){
 			// o tempo de producao eh calculado com a (quantidade de horas extras/quantidade de horas trabalhadas) * 100
@@ -84,7 +84,7 @@ class SystemController extends AppController{
 			$query->select(['total' => $query->func()->count('idemployer')]);
 			$retorno = $query->first()->total;
 		}
-		echo $retorno;
+		return $this->response->withStringBody(json_encode($retorno));
 	}
 	
 	/**
@@ -107,7 +107,7 @@ class SystemController extends AppController{
 			$retorno['dados'][] = $employers->first()->total;
 		}
 		
-		echo json_encode($retorno);
+		return $this->response->withType('application/json')->withStringBody(json_encode($retorno));
 	}
 	
 	public function getValPerSector(){
@@ -124,10 +124,10 @@ class SystemController extends AppController{
 			$employers->where(['idsector' => $sector->idsector]);
 			
 			$retorno['dados']['total'][] = (float)$employers->first()->total_salary;
-			$retorno['dados']['media'][] = (float)$employers->first()->avg_salary;
+			$retorno['dados']['media'][] = str_replace(",","",number_format($employers->first()->avg_salary,2));
 		}
 		
-		echo json_encode($retorno);
+		return $this->response->withType('application/json')->withStringBody(json_encode($retorno));
 	}
 	
 	public function getQtyPerGenre(){
@@ -160,7 +160,7 @@ class SystemController extends AppController{
 		$retorno['genre'][] = 'Transexual';
 		$retorno['total'][] = $query->first()->total;
 		
-		echo json_encode($retorno);
+		return $this->response->withType('application/json')->withStringBody(json_encode($retorno));
 	}
 	
 	/**
@@ -229,7 +229,7 @@ class SystemController extends AppController{
 			}
 		}
 		
-		echo json_encode($retorno);
+		return $this->response->withType('application/json')->withStringBody(json_encode($retorno));
 	}
 	
 	/**
@@ -288,7 +288,7 @@ class SystemController extends AppController{
 			}
 		}
 		
-		echo json_encode($retorno);
+		return $this->response->withType('application/json')->withStringBody(json_encode($retorno));
 	}
 	
 	/**
@@ -310,10 +310,10 @@ class SystemController extends AppController{
 			
 			$retorno['labels'][]       = html_entity_decode($position->name);
 			$retorno['total_salary'][] = (float)$query->first()->total_salary;
-			$retorno['avg_salary'][]   = (float)$query->first()->avg_salary;
+			$retorno['avg_salary'][]   = str_replace(",","",number_format($query->first()->avg_salary,2));
 		}
 		
-		echo json_encode($retorno);
+		return $this->response->withType('application/json')->withStringBody(json_encode($retorno));
 	}
 	
 	/**
@@ -335,9 +335,9 @@ class SystemController extends AppController{
 			
 			$retorno['labels'][]       = html_entity_decode($study->name);
 			$retorno['total_salary'][] = (float)$query->first()->total_salary;
-			$retorno['avg_salary'][]   = (float)$query->first()->avg_salary;
+			$retorno['avg_salary'][]   = str_replace(",","",number_format($query->first()->avg_salary,2));
 		}
 		
-		echo json_encode($retorno);
+		return $this->response->withType('application/json')->withStringBody(json_encode($retorno));
 	}
 }

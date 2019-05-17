@@ -22,14 +22,16 @@ class RobotController extends AppController{
 		
 		$this->autoRender = false;
 		
-		/*$tblEmployer = new TableRegistry::get('Employer');*/
+		$tblEmployer = TableRegistry::get('Employer');
 		
+		$m = 0;
 		for($i=0;$i<60;$i++){
-			$estudoh = $this->getStudy();
+			/*$estudoh = $this->getStudy();
 			$admish  = $this->getAdmission();
 			echo "+ ".$this->getFirstName("H")." ".$this->getLastName().",".$estudoh.",".$this->getPosition($estudoh).",".$admish.",M,".$this->getResignation($admish).",".$this->getBirthday()."<br/>";
+			*/
 			
-			/*
+			
 			$employer = $tblEmployer->newEntity();
 			$employer->name = $this->getFirstName("H")." ".$this->getLastName();
 			$employer->idsector = $this->getSector();
@@ -40,14 +42,18 @@ class RobotController extends AppController{
 			$employer->resignation = $this->getResignation($employer->admission);
 			$employer->genre = 'M';
 			$employer->salary = $this->getSalary($employer->idposition);
-			*/
+			$m += ($tblEmployer->save($employer)?1:0);
 		}
+		
+		echo "Foram salvas $m informa&ccedil;&otildes;es de funcion&aacute;rios masculinos!<br/>";
+		
+		$f = 0;
 		for($i=0;$i<60;$i++){
-			$estudo = $this->getStudy();
+			/*$estudo = $this->getStudy();
 			$admisf = $this->getAdmission();
 			echo "- ".$this->getFirstName("F")." ".$this->getLastName().",".$estudo.",".$this->getPosition($estudo).",".$admisf.",F,".$this->getResignation($admisf).",".$this->getBirthday()."<br/>";
+			*/
 			
-			/*
 			$employer = $tblEmployer->newEntity();
 			$employer->name = $this->getFirstName("F")." ".$this->getLastName();
 			$employer->idsector = $this->getSector();
@@ -58,8 +64,10 @@ class RobotController extends AppController{
 			$employer->resignation = $this->getResignation($employer->admission);
 			$employer->genre = 'F';
 			$employer->salary = $this->getSalary($employer->idposition);
-			*/
+			$f += ($tblEmployer->save($employer)?1:0);
 		}
+		
+		echo "Foram salvas $f informa&ccedil;&otildes;es de funcion&aacute;rios feminios!";
 	}
 	
 	private function getFirstName($genre){
@@ -186,14 +194,14 @@ class RobotController extends AppController{
 	private function getSalary($position){
 		$salary = 0;
 		switch($position){
-			case 1: $salary = 40.000; break;
-			case 2: $salary = 15.000; break;
-			case 3: $salary = 7.000; break;
-			case 4: $salary = 5.500; break;
-			case 5: $salary = 6.000; break;
-			case 6: $salary = 8.500; break;
-			case 7: $salary = 1.700; break;
-			case 8: $salary = 998; break;
+			case 1: $salary = 40000; break;//diretor
+			case 2: $salary = 15000; break;//gerente
+			case 3: $salary = 7000; break;//coordenador
+			case 4: $salary = 5500; break;//analista
+			case 5: $salary = 6000; break;//consultor
+			case 6: $salary = 8500; break;//vendedor
+			case 7: $salary = 1700; break;//auxiliar
+			case 8: $salary = 998; break;//menor aprendiz
 		}
 		
 		return $salary;
